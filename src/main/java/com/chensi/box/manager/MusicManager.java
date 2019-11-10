@@ -77,6 +77,12 @@ public class MusicManager {
 			}
 		}
 	}
+
+	public static void playEffect(Context context, int res) {
+		MediaPlayer musicEffect = MediaPlayer.create(context, res);
+		musicEffect.setLooping(false);
+		musicEffect.start();
+	}
 	
 	
 }
