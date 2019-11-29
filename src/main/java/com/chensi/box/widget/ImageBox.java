@@ -39,7 +39,7 @@ public class ImageBox extends Box{
 		super.initTexture(gl10, 1);
 		super.setTexture(gl10, 0, bmp);
 
-        bmp.recycle();
+//        bmp.recycle();
         bmp = null;
 	}
 	

@@ -70,6 +70,11 @@ public class AnimationManager {
 		public void setAnimationNothing(int runningTime) {
 			type = TYPE_NOTHING;
 
+			destLeft = 0;
+			destTop = 0;
+			startLeft = 0;
+			startTop = 0;
+
 			init(runningTime);
 		}
 		
@@ -259,17 +264,21 @@ public class AnimationManager {
 			}
 		}
 	}
-	
-	
+
+
 	public static boolean drawAnimation(Box box, GL10 gl10, Paint paint) {
+		return drawAnimation(box, gl10, paint, 0, 0);
+	}
+	
+	public static boolean drawAnimation(Box box, GL10 gl10, Paint paint, int offsetX, int offsetY) {
 		AnimationInfo info = box.getAnimation();
 		
 		info.runProgress();
 
 		float newScale = info.getScale();
 
-		int left = info.getPositionLeft();
-		int top = info.getPositionTop();
+		int left = info.getPositionLeft() + offsetX;
+		int top = info.getPositionTop() + offsetY;
 		float alpha = info.getAlpha();
 		
 //		if (newScale != 1) {

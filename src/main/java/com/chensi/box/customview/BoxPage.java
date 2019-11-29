@@ -149,23 +149,24 @@ public abstract class BoxPage {
 		// Draw boxs
 		synchronized (aBox) {
 			for (Box box : aBox) {
-				int boxNeedDraw = box.needDraw();
-
-				if (boxNeedDraw == Box.DRAW_ANIMATION) {
-					AnimationManager.drawAnimation(box, gl10, paint);
-				} else if (boxNeedDraw == Box.DRAW_NEED) {
-					if (!box.getIgnoreScaleDraw()) {
-						gl10.glScalef(scale, scale, 1f);
-						gl10.glTranslatef(zoomPosX, zoomPosY, 0f);
-
-						box.draw(gl10, paint, rect.left, rect.top);
-
-						gl10.glTranslatef(-zoomPosX, -zoomPosY, 0f);
-						gl10.glScalef(1f / scale, 1f / scale, 1f);
-					} else {
-						box.draw(gl10, paint, rect.left, rect.top);
-					}
-				}
+				box.drawOnPage(gl10, paint, rect.left, rect.top, scale, zoomPosX, zoomPosY);
+//				int boxNeedDraw = box.needDraw();
+//
+//				if (boxNeedDraw == Box.DRAW_ANIMATION) {
+//					AnimationManager.drawAnimation(box, gl10, paint);
+//				} else if (boxNeedDraw == Box.DRAW_NEED) {
+//					if (!box.getIgnoreScaleDraw()) {
+//						gl10.glScalef(scale, scale, 1f);
+//						gl10.glTranslatef(zoomPosX, zoomPosY, 0f);
+//
+//						box.draw(gl10, paint, rect.left, rect.top);
+//
+//						gl10.glTranslatef(-zoomPosX, -zoomPosY, 0f);
+//						gl10.glScalef(1f / scale, 1f / scale, 1f);
+//					} else {
+//						box.draw(gl10, paint, rect.left, rect.top);
+//					}
+//				}
 			}
 		}
 	}
@@ -390,16 +391,17 @@ public abstract class BoxPage {
 		
 		// Animation
 		for (Box box : aBox) {
-			int boxNeedDraw = box.needDraw();
-
-			if (boxNeedDraw == Box.DRAW_ANIMATION) {
-				box.getAnimation().skip(count);
-				if (!box.getAnimation().isEnable()) {
-					box.getAnimation().close();
-				}
-			} else if (boxNeedDraw == Box.DRAW_NEED) {
-				box.skipDraw();
-			}
+			box.skipDraw(count);
+//			int boxNeedDraw = box.needDraw();
+//
+//			if (boxNeedDraw == Box.DRAW_ANIMATION) {
+//				box.getAnimation().skip(count);
+//				if (!box.getAnimation().isEnable()) {
+//					box.getAnimation().close();
+//				}
+//			} else if (boxNeedDraw == Box.DRAW_NEED) {
+//
+//			}
 		}
 	}
 	

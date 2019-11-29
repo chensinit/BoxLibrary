@@ -8,6 +8,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import com.chensi.box.customview.BoxBinderActivity;
 import com.chensi.box.customview.BoxPage.BoxRequest;
+import com.chensi.box.manager.AnimationManager;
 import com.chensi.box.manager.TouchEventManager;
 import com.chensi.box.manager.TouchEventManager.OnClickEvent;
 import com.chensi.box.manager.TouchEventManager.OnLongClickEvent;
@@ -169,6 +170,29 @@ public abstract class Box {
 	protected void setScissor(GL10 gl10, int left, int top, int right, int bottom) {
 		mRequest.setScissor(gl10, left, top, right, bottom);
 	}
+
+	// Request draw from BoxPage
+	public void drawOnPage(GL10 gl10, Paint paint, int left, int top, float scale, float zoomPosX, float zoomPosY) {
+		int boxNeedDraw = needDraw();
+
+		if (boxNeedDraw == Box.DRAW_ANIMATION) {
+			AnimationManager.drawAnimation(this, gl10, paint);
+		} else if (boxNeedDraw == Box.DRAW_NEED) {
+			if (!getIgnoreScaleDraw()) {
+				gl10.glScalef(scale, scale, 1f);
+				gl10.glTranslatef(zoomPosX, zoomPosY, 0f);
+
+				draw(gl10, paint, left, top);
+
+				gl10.glTranslatef(-zoomPosX, -zoomPosY, 0f);
+				gl10.glScalef(1f / scale, 1f / scale, 1f);
+			} else {
+				draw(gl10, paint, left, top);
+			}
+		}
+	}
+
+
 	
 	// draw to canvas
 	public void draw(GL10 gl10, Paint paint) {
@@ -242,8 +266,17 @@ public abstract class Box {
 	
 	protected abstract void prepareTexture(GL10 gl10, Paint paint);
 	
-	public void skipDraw() {
-		
+	public void skipDraw(int count) {
+		int boxNeedDraw = needDraw();
+
+		if (boxNeedDraw == Box.DRAW_ANIMATION) {
+			getAnimation().skip(count);
+			if (!getAnimation().isEnable()) {
+				getAnimation().close();
+			}
+		} else if (boxNeedDraw == Box.DRAW_NEED) {
+
+		}
 	}
 	
 	public boolean contains(int x, int y) {

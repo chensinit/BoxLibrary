@@ -7,6 +7,7 @@ import javax.microedition.khronos.opengles.GL10;
 import com.chensi.box.customview.BoxBinderActivity;
 import com.chensi.box.customview.BoxPage.AfterDrawCallback;
 import com.chensi.box.customview.BoxPage.BoxRequest;
+import com.chensi.box.manager.AnimationManager;
 import com.chensi.box.manager.TouchEventManager;
 import com.chensi.box.util.BgManager;
 
@@ -75,7 +76,12 @@ public class ContainerBox extends Box {
 		super.onDraw(gl10, paint, rect, textureNumber);
 
 		for (Box box : aBox) {
-			if (box.getVisible()) {
+			int boxNeedDraw = box.needDraw();
+			if (boxNeedDraw == Box.DRAW_ANIMATION) {
+				int left = rect.left + padding;
+				int top = rect.top + padding;
+				AnimationManager.drawAnimation(box, gl10, paint ,left, top);
+			} else if (box.getVisible()) {
 				box.draw(gl10, paint, rect.left + padding, rect.top + padding);
 			}
 		}
